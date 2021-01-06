@@ -19,13 +19,12 @@ class Up extends Component {
     description: "",
     success: false,
     loading: false,
-    brand_id:this.props.location.state.brand.brand_id,
+    brand_id: this.props.location.state.brand.brand_id,
     brand_name: this.props.location.state.brand.brand_name,
     brand_origin: this.props.location.state.brand.brand_origin,
     brand_about: this.props.location.state.brand.brand_about,
     image: this.props.location.state.brand.image,
   };
-
 
   handleChange = (e) => {
     this.setState({
@@ -63,24 +62,21 @@ class Up extends Component {
     if (!brand_about) this.setState({ message: "Submit about" });
     this.setState({ messageadd: "" });
 
-    if (
-      brand_name &&
-      brand_origin&&
-      brand_about&&
-      brand_id
-    ) {
+    if (brand_name && brand_origin && brand_about && brand_id) {
       this.setState({ loading: true });
       let data = new FormData();
       data.append("image", file);
-      const success = () =>
+      const success = () => {
         this.setState({
           loading: false,
           message: "Successfully ",
           brand_name: "",
-          brand_origin:"",
-          brand_about:"",
-          brand_id:""
+          brand_origin: "",
+          brand_about: "",
+          brand_id: "",
         });
+        this.props.history.push("/brands");
+      };
 
       const failure = (e) => {
         this.setState({
@@ -93,8 +89,8 @@ class Up extends Component {
       const brandsRef = firebase
         .firestore()
         .collection("brands")
-        .doc( brand_id);
-      await  brandsRef
+        .doc(brand_id);
+      await brandsRef
         .update({
           brand_name,
           brand_origin,
@@ -137,7 +133,6 @@ class Up extends Component {
             ""
           )}
 
-
           <form onSubmit={this.handleSubmit}>
             <label htmlFor="">Name</label>
             <input
@@ -171,7 +166,6 @@ class Up extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    
     brands: state.brandsReducer,
     user: state.userReducer,
   };

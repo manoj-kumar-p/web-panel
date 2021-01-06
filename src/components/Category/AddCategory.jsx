@@ -13,14 +13,13 @@ import firebase from "../../init-firebase";
 
 class AddCategory extends Component {
   state = {
-    images: "", 
-    imagePreview:"",
+    images: "",
+    imagePreview: [],
     message: "",
     description: "",
     success: false,
     loading: false,
   };
-
 
   handleChange = (e) => {
     this.setState({
@@ -29,35 +28,28 @@ class AddCategory extends Component {
   };
 
   handleImage = async (e) => {
-    let tempArray = "";
+    let tempArray = [];
     let files = e.target.files;
-
+    tempArray.push(files[0]);
     this.setState({
       imagePreview: tempArray,
     });
-    
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      imagePreview,
-      category_name,
-    } = this.state;
+    const { imagePreview, category_name } = this.state;
     const token = this.props.user.token;
 
-    if (! category_name) this.setState({ message: "Submit name" });
-    if (!imagePreview) this.setState({ message: "Submit image" });
+    if (!category_name) this.setState({ message: "Submit name" });
+    if (imagePreview.length < 1) this.setState({ message: "Submit image" });
 
     this.setState({ messageadd: "" });
 
-    if (
-      imagePreview &&
-      category_name 
-    ) {
+    if (imagePreview.length > 0 && category_name) {
       this.setState({ loading: true });
       var uploadUrls = await new Promise((resolve, reject) => {
-        let tempUrls = "";
+        let tempUrls = [];
         try {
           imagePreview.forEach(async (e) => {
             var uploadTask = await firebase
@@ -100,7 +92,7 @@ class AddCategory extends Component {
         .set({
           category_name,
           category_id: categoriesRef.id,
-          images: this.state.images,
+          images: this.state.images[0],
         })
         .then(success)
         .catch(failure);
@@ -140,13 +132,11 @@ class AddCategory extends Component {
           )}
 
           <div className="photo">
-            <div
-              className="image"
-            >
+            <div className="image">
               {imagePreview.length > 0 ? (
                 <>
                   {
-                    ((tempImages = ""),
+                    ((tempImages = []),
                     imagePreview.forEach((e) => {
                       tempImages.push(
                         <img
@@ -173,7 +163,7 @@ class AddCategory extends Component {
               id="photo"
               type="file"
               accept="image/x-png,image/gif,image/jpeg, .jpg"
-              multiple
+              // multiple
             />
           </div>
 

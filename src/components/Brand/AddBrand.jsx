@@ -13,14 +13,15 @@ import firebase from "../../init-firebase";
 
 class AddBrand extends Component {
   state = {
-    image: "", 
-    imagePreview:"",
+    image: "",
+    imagePreview: [],
     message: "",
     description: "",
     success: false,
     loading: false,
+    brand_about: "",
+    brand_origin: "",
   };
-
 
   handleChange = (e) => {
     this.setState({
@@ -29,39 +30,30 @@ class AddBrand extends Component {
   };
 
   handleImage = async (e) => {
-    let tempArray = "";
+    let tempArray = [];
     let files = e.target.files;
-
+    tempArray.push(files[0]);
     this.setState({
       imagePreview: tempArray,
     });
-    
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      imagePreview,
-      brand_name,
-      brand_origin,
-      brand_about,
-    } = this.state;
+    const { imagePreview, brand_name, brand_origin, brand_about } = this.state;
     const token = this.props.user.token;
 
-    if (!brand_origin) this.setState({ message: "Submit name" });
-    if (!brand_about) this.setState({ message: "Submit origin" });
-    if (!brand_name) this.setState({ message: "Submit about" });
+    if (!brand_origin) this.setState({ message: "Submit origin" });
+    if (!brand_about) this.setState({ message: "Submit about" });
+    if (!brand_name) this.setState({ message: "Submit name" });
     if (imagePreview.length < 1) this.setState({ message: "Submit image" });
 
     this.setState({ messageadd: "" });
 
-    if (
-      imagePreview &&
-      brand_name 
-    ) {
+    if (imagePreview.length > 0 && brand_name && brand_about && brand_origin) {
       this.setState({ loading: true });
       var uploadUrls = await new Promise((resolve, reject) => {
-        let tempUrls = "";
+        let tempUrls = [];
         try {
           imagePreview.forEach(async (e) => {
             var uploadTask = await firebase
@@ -85,8 +77,8 @@ class AddBrand extends Component {
           loading: false,
           message: "Successfully added ",
           brand_name: "",
-          brand_about:"",
-          brand_origin:"",
+          brand_about: "",
+          brand_origin: "",
           imagePreview: "",
           image: "",
         });
@@ -109,7 +101,7 @@ class AddBrand extends Component {
           brand_origin,
           brand_about,
           brand_id: brandsRef.id,
-          image: this.state.image,
+          image: this.state.image[0],
         })
         .then(success)
         .catch(failure);
@@ -151,13 +143,11 @@ class AddBrand extends Component {
           )}
 
           <div className="photo">
-            <div
-              className="image"
-            >
+            <div className="image">
               {imagePreview.length > 0 ? (
                 <>
                   {
-                    ((tempImages = ""),
+                    ((tempImages = []),
                     imagePreview.forEach((e) => {
                       tempImages.push(
                         <img
@@ -184,7 +174,7 @@ class AddBrand extends Component {
               id="photo"
               type="file"
               accept="image/x-png,image/gif,image/jpeg, .jpg"
-              multiple
+              // multiple
             />
           </div>
 
@@ -198,7 +188,7 @@ class AddBrand extends Component {
             />
             <label htmlFor="">Origin</label>
             <input
-              value={brand_origin|| ""}
+              value={brand_origin || ""}
               onChange={this.handleChange}
               name="brand_origin"
               type="text"

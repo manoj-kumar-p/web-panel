@@ -19,9 +19,8 @@ class UpdateCategory extends Component {
     success: false,
     loading: false,
     category_name: this.props.location.state.category.category_name,
-    category_id: this.props.location.state.category.category_id
+    category_id: this.props.location.state.category.category_id,
   };
-
 
   handleChange = (e) => {
     this.setState({
@@ -31,30 +30,25 @@ class UpdateCategory extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      category_name,
-      category_id,
-      file,
-    } = this.state;
+    const { category_name, category_id, file } = this.state;
     const token = this.props.user.token;
     console.log("state:", this.state);
     if (!category_name) this.setState({ message: "Submit name" });
     this.setState({ messageadd: "" });
 
-    if (
-      category_name &&
-      category_id
-    ) {
+    if (category_name && category_id) {
       this.setState({ loading: true });
       let data = new FormData();
       data.append("image", file);
-      const success = () =>
+      const success = () => {
         this.setState({
           loading: false,
           message: "Successfull ",
           category_name: "",
           category_id: "",
         });
+        this.props.history.push("/categories");
+      };
 
       const failure = (e) => {
         this.setState({
@@ -106,7 +100,6 @@ class UpdateCategory extends Component {
           ) : (
             ""
           )}
-
 
           <form onSubmit={this.handleSubmit}>
             <label htmlFor="">Name</label>

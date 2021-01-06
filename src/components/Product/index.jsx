@@ -220,8 +220,12 @@ class index extends Component {
                     <span>{product.inSale ? "Yes" : "No"}</span>
                   </div>
                   <div>
-                    Featured on homePage? <br />
+                    Featured on HomePage? <br />
                     <span>{product.isFeatured ? "Yes" : "No"}</span>
+                  </div>
+                  <div>
+                    Has size? <br />
+                    <span>{product.hasSize ? "Yes" : "No"}</span>
                   </div>
                 </div>
                 <div className="weight">
@@ -239,6 +243,14 @@ class index extends Component {
                   <span>
                     {product.quality} 
                   </span>
+                  
+                </div>
+                <div className="weight">
+                  Wings <br />
+                  <span>
+                    {product.wings} 
+                  </span>
+                  
                 </div>
               </div>
 
@@ -251,6 +263,10 @@ class index extends Component {
           <div className="description">
             Description <br />
             <div dangerouslySetInnerHTML={{ __html: product.description }} />
+          </div>
+          <div className="description">
+            Features <br />
+            <div dangerouslySetInnerHTML={{ __html: product.features }} />
           </div>
         </div>
       </div>

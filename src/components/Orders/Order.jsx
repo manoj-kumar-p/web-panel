@@ -21,9 +21,39 @@ class Order extends Component {
     }
 
 
+
+    timeConverter(UNIX_timestamp) {
+      var a = new Date(UNIX_timestamp * 1000);
+      var months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      var year = a.getFullYear();
+      var month = months[a.getMonth()];
+      // month = a.getMonth();
+      var date = a.getDate();
+      var hour = a.getHours();
+      var min = a.getMinutes();
+      var sec = a.getSeconds();
+      var time =
+        date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
+      return time;
+    }
     render() {
         const { detail, input } = this.state
         const { order, status } = this.props
+        const products =order.products;
+        const productsquantities =order.productQuantities;
         return <div className="order">
             {input && <div className="confirm-process">
                 <div>
@@ -48,6 +78,10 @@ class Order extends Component {
                       Order Number
                       <span>{order.orderNumber}</span>
                     </div>
+                    <div> Date and time
+                    <span>
+                      {this.timeConverter(order.timestamp.seconds)}
+                    </span></div>
                     <div>
                       Name
                       <span>{order.name}</span>
@@ -100,17 +134,17 @@ class Order extends Component {
 
                 <div className="product-shipping">
                   <span>Products</span>
-                  
+                  <div classname="product">
+                    </div>
                 </div>
               </div> : <div onClick={() => this.setState({
                     detail: true,
                   })} className="hide">
                 <span>Order No: {order.orderNumber}</span>
+                <span>Date:{this.timeConverter(order.timestamp.seconds)}</span>
                 <span>Name: {order.name}</span>
                 <span>Mobile: {order.phone}</span>
-                {/* <span>Total : {Object.keys(order.products).length} product</span> */}
                 <span>Total : {order.total}</span>
-                {/* <span>Date : {order.timestamp}</span> */}
               </div>}
           </div>;
     }

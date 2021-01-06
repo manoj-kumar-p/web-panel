@@ -25,6 +25,7 @@ import UpdateCoupon from "./components/Coupon/Up";
 import Coupon from "./components/Coupon";
 import Brand from "./components/Brand/index";
 import Category from "./components/Category";
+import Upd from "./components/Product/Upd";
 
 class App extends Component {
   componentDidMount() {
@@ -64,7 +65,7 @@ class App extends Component {
             <Route path="/addcoupon" component={AddCoupon} />
             <Route path="/product/:id" component={Product} />
             <Route path="/admin" component={Admin} />
-            <Route path="/updateproduct/:id" component={Up} />
+            <Route path="/updateproduct/:id" component={Upd} />
             <Route path="/updatecategory/:id" component={UpdateCategory} />
             <Route path="/updatebrand/:id" component={UpdateBrand} />
             <Route path="/updatecoupon/:code" component={UpdateCoupon} />

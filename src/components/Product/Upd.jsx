@@ -1,35 +1,57 @@
 import React, { Component } from "react";
 import "./addproduct.scss";
+import axios from "axios";
 import ReactQuill from "react-quill";
 import { Link } from "react-router-dom";
 import "react-quill/dist/quill.snow.css";
+import { url, headers } from "../../config";
 import { connect } from "react-redux";
-import _, { intersection, reject } from "lodash";
+import _ from "lodash";
 
 import Header from "../Header";
 import Navbar from "../Navbar";
 import Loading from "../Loading";
 import firebase from "../../init-firebase";
 
-class AddProduct extends Component {
+class Upd extends Component {
   state = {
     categories: [],
     brands: [],
-    imagePreview: [],
-    imageUrls: [], //todo
+    imagePreview: "",
+    // imageUrls: [], //todo
     message: "",
     description: "",
     success: false,
-    hasSize: false,
     loading: false,
+    name: this.props.location.state.product.name,
+    imageUrls: this.props.location.state.product.imageUrls,
+    item_id: this.props.location.state.product.item_id,
+    category_id: this.props.location.state.product.category_id,
+    brand_id: this.props.location.state.product.brand_id,
+    salePrice: this.props.location.state.product.salePrice,
+    originalPrice: this.props.location.state.product.originalPrice,
+    inSale: this.props.location.state.product.inSale,
+    isFeatured: this.props.location.state.product.isFeatured,
+    stockLeft: this.props.location.state.product.stockLeft,
+    description: this.props.location.state.product.description.join("*"),
+    features: this.props.location.state.product.features.join("*"),
+    hasSize: this.props.location.state.product.hasSize,
+    wings: this.props.location.state.product.wings,
+    quality: this.props.location.state.product.quality,
+    sizes:
+      this.props.location.state.product.sizes == null ||
+      this.props.location.state.product.sizes == undefined
+        ? ""
+        : this.props.location.state.product.sizes.join(","),
   };
 
   async componentDidMount() {
+    this.getImages();
     let categories = this.props.categories.data;
     if (_.isArray(categories)) {
       this.setState({ categories });
     }
-    let brands = await this.props.brands.data;
+    let brands = this.props.brands.data;
     if (_.isArray(brands)) {
       this.setState({ brands });
     }
@@ -43,6 +65,27 @@ class AddProduct extends Component {
         this.setState({ brands: JSON.parse(t_brands) });
       }
     }
+  }
+  async getImages() {
+    var tempBlobs = [];
+    console.log("function");
+    console.log(this.state.imageUrls);
+    this.state.imageUrls.forEach((url) => {
+      console.log("inside function");
+      console.log(url);
+      fetch(url)
+        .then(function(response) {
+          return response.blob();
+        })
+        .then(function(blob) {
+          tempBlobs.push(blob);
+        })
+        .catch((e) => console.log("error happened getting image blobs"));
+      if (tempBlobs.length == this.state.imageUrls) {
+        this.setState({ imagePreview: tempBlobs });
+        console.log("done getting images");
+      }
+    });
   }
 
   selectCategory = (e) => {
@@ -73,7 +116,7 @@ class AddProduct extends Component {
   handleSuccess = () => {
     this.setState({
       loading: false,
-      message: "Successfully added product",
+      message: "Successfully updated product",
       description: "",
       salePrice: "",
       originalPrice: "",
@@ -91,20 +134,22 @@ class AddProduct extends Component {
       hasSize: false,
       quality: "",
     });
+    this.props.history.push("/products");
   };
 
   handleFailure = (e) => {
     this.setState({
       loading: false,
-      message: "Failed to add product",
+      message: "Failed to update product",
     });
-    console.log("error adding product ", e);
+    console.log("error updating product ", e);
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
     const {
       imagePreview,
+      imageUrls,
       name,
       category_id,
       brand_id,
@@ -119,6 +164,7 @@ class AddProduct extends Component {
       wings,
       quality,
       sizes,
+      item_id,
     } = this.state;
     const token = this.props.user.token;
 
@@ -131,7 +177,7 @@ class AddProduct extends Component {
     if (!inSale) this.setState({ message: "Submit inSale" });
     if (!isFeatured) this.setState({ message: "Submit isFeatured" });
     if (!stockLeft) this.setState({ message: "Submit isFeatured" });
-    if (imagePreview.length < 1) this.setState({ message: "Submit image" });
+    if (imageUrls.length < 1) this.setState({ message: "Submit image" });
     if (!wings) this.setState({ message: "Enter wings" });
     if (!quality) this.setState({ message: "Enter quality" });
     if (!features) this.setState({ message: "Enter features" });
@@ -144,7 +190,7 @@ class AddProduct extends Component {
     // return;
 
     if (
-      imagePreview.length > 0 &&
+      imageUrls.length > 0 &&
       description &&
       salePrice &&
       originalPrice &&
@@ -160,34 +206,35 @@ class AddProduct extends Component {
       (hasSize && !sizes).toString() === "false"
     ) {
       this.setState({ loading: true });
-      var uploadUrls = await new Promise((resolve, reject) => {
-        let tempUrls = [];
-        try {
-          imagePreview.forEach(async (e) => {
-            var uploadTask = await firebase
-              .storage()
-              .ref("sample/" + Date.now().toString() + e.name)
-              .put(e);
-            var url = await uploadTask.ref.getDownloadURL();
-            tempUrls.push(url);
-            if (tempUrls.length == imagePreview.length) resolve(tempUrls);
-          });
-        } catch (error) {
-          reject(new Error("error happened while uploading"));
-        }
-      });
-      console.log("upUrls: ", uploadUrls);
-      this.setState({ imageUrls: uploadUrls });
-      console.log("state: ", this.state.imageUrls);
+      if (imagePreview.length > 0) {
+        var uploadUrls = await new Promise((resolve, reject) => {
+          let tempUrls = [];
+          try {
+            imagePreview.forEach(async (e) => {
+              var uploadTask = await firebase
+                .storage()
+                .ref("sample/" + Date.now().toString() + e.name)
+                .put(e);
+              var url = await uploadTask.ref.getDownloadURL();
+              tempUrls.push(url);
+              if (tempUrls.length == imagePreview.length) resolve(tempUrls);
+            });
+          } catch (error) {
+            reject(new Error("error happened while uploading"));
+          }
+        });
+        console.log("upUrls: ", uploadUrls);
+        this.setState({ imageUrls: uploadUrls });
+        console.log("state: ", this.state.imageUrls);
+      }
       //TODO
       const productsRef = firebase
         .firestore()
         .collection("products")
-        .doc();
+        .doc(item_id);
       await productsRef
-        .set({
+        .update({
           name, //
-          item_id: productsRef.id, //done
           imageUrls: this.state.imageUrls, //done
           salePrice: parseInt(salePrice),
           brand_id, //
@@ -239,6 +286,7 @@ class AddProduct extends Component {
       <div className="add-wrapper">
         <Header />
         <Navbar />
+
         <Link to="/products">
           <div className="cancel">
             <i className="demo-icon icon-cancel">&#xe80f;</i>
@@ -247,7 +295,7 @@ class AddProduct extends Component {
         {loading ? <Loading /> : ""}
 
         <div className="add-product">
-          <h1>Add Product</h1>
+          <h1>Update Product</h1>
           {success ? (
             <div className="success">
               <div>Success</div>
@@ -485,4 +533,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(AddProduct);
+export default connect(mapStateToProps)(Upd);

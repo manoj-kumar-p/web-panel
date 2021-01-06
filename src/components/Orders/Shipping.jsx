@@ -4,7 +4,7 @@ import { url, headers } from "../../config";
 import _ from "lodash";
 import { connect } from "react-redux";
 import "./new.scss";
-import firebase from '../../init-firebase';
+import firebase from "../../init-firebase";
 
 import Order from "./Order";
 
@@ -20,12 +20,12 @@ class Shipped extends Component {
   }
 
   async fetchOrdersUnconfirmed() {
-    let orders = localStorage.getItem("processorders");
+    let orders = localStorage.getItem("shippedOrders");
     if (orders) {
       this.setState({ orders: JSON.parse(orders), loading: false });
     }
-    var ordersArray =[];
-    const updateOrders=(orders)=>this.setState({orders,loading:false})
+    var ordersArray = [];
+    const updateOrders = (orders) => this.setState({ orders, loading: false });
     // const ordersRef = firebase.database().ref('/orders');
     // ordersRef.on('value',function(snapshot){
     //   if(snapshot.exists){
@@ -39,14 +39,19 @@ class Shipped extends Component {
     //     localStorage.setItem("neworders", JSON.stringify(ordersArray));
     //   }
     // });
-    await firebase.firestore().collection('orders').where("status","==","shipped").get()
-     .then(function(snapshot){
-      console.log("snap",snapshot);
-      snapshot.forEach(doc=>{
-        ordersArray.push(doc.data())
-      })
-      updateOrders(ordersArray)
-    });
+    await firebase
+      .firestore()
+      .collection("orders")
+      .where("status", "==", "shipped")
+      .get()
+      .then(function(snapshot) {
+        console.log("snap", snapshot);
+        snapshot.forEach((doc) => {
+          ordersArray.push(doc.data());
+        });
+        updateOrders(ordersArray);
+        localStorage.setItem("shippedOrders", JSON.stringify(ordersArray));
+      });
     console.log(this.state.orders);
     //  this.setState({
     //    orders: [
@@ -68,7 +73,7 @@ class Shipped extends Component {
     //        {
     //         product_id: 1,
     //         order_detail_id: 2,
-    //         name:"chapati", 
+    //         name:"chapati",
     //         quantity: 2,
     //         price: 200,
     //        },
@@ -86,17 +91,24 @@ class Shipped extends Component {
     //  });
   }
 
-  confirm =async (id) => {
+  confirm = async (id) => {
     this.setState({ loading: true });
 
-    const updateSuccess=(e)=>{this.setState({message: "Success confirm order", loading: false});this.fetchOrdersUnconfirmed();};
-    const failedSuccess=(e)=>this.setState({message: "Failed to confirm order", loading: false})
-   
-    await firebase.firestore().collection('orders').doc(id)
+    const updateSuccess = (e) => {
+      this.setState({ message: "Success confirm order", loading: false });
+      this.fetchOrdersUnconfirmed();
+    };
+    const failedSuccess = (e) =>
+      this.setState({ message: "Failed to confirm order", loading: false });
+
+    await firebase
+      .firestore()
+      .collection("orders")
+      .doc(id)
       .update({ status: "delivered" })
-      .then(updateSuccess).catch(failedSuccess);
-    this.setState({loading:false})
-    
+      .then(updateSuccess)
+      .catch(failedSuccess);
+    this.setState({ loading: false });
   };
 
   render() {

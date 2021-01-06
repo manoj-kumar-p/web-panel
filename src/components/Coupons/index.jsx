@@ -34,6 +34,10 @@ class index extends Component {
 
   fetchCoupons = async () => {
     var couponsArray = [];
+    var t_coupons = localStorage.getItem("coupons");
+    if (t_coupons) {
+      this.setState({ coupons: JSON.parse(t_coupons), loading: false });
+    }
 
     const couponsRef = firebase.firestore().collection("coupons");
     await couponsRef.get().then(function(snapshot) {
@@ -46,16 +50,8 @@ class index extends Component {
     this.props.couponAction(couponsArray);
   };
 
-  
-
   render() {
-    const {
-      top,
-      loading,
-      show,
-      coupons,
-      code,
-    } = this.state;
+    const { top, loading, show, coupons, code } = this.state;
     return (
       <div className="products">
         <Header />

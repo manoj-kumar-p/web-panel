@@ -34,28 +34,23 @@ class index extends Component {
 
   fetchBrands = async () => {
     var brandsArray = [];
-
+    var t_brands = localStorage.getItem("brands");
+    if (t_brands) {
+      this.setState({ brands: JSON.parse(t_brands), loading: false });
+    }
     const brandsRef = firebase.firestore().collection("brands");
     await brandsRef.get().then(function(snapshot) {
       snapshot.forEach((doc) => brandsArray.push(doc.data()));
     });
-    console.log("brand: ",brandsArray);
+    console.log("brand: ", brandsArray);
 
     this.setState({ brands: brandsArray, loading: false });
     localStorage.setItem("brands", JSON.stringify(brandsArray));
     this.props.brandAction(brandsArray);
   };
 
-  
-
   render() {
-    const {
-      top,
-      loading,
-      show,
-      brands,
-      brand_id,
-    } = this.state;
+    const { top, loading, show, brands, brand_id } = this.state;
     return (
       <div className="products">
         <Header />

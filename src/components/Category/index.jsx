@@ -72,7 +72,9 @@ class index extends Component {
               <button
                 onClick={() => {
                   this.deleteCategory(
-                    category.category_id == null ? category.id : category.category_id
+                    category.category_id == null
+                      ? category.id
+                      : category.category_id
                   );
                 }}
               >
@@ -116,7 +118,7 @@ class index extends Component {
               style={{ textDecoration: "none" }}
               to={{
                 pathname: `/updatecategory/${category.category_id}`,
-                state: {category },
+                state: { category },
               }}
             >
               <div className="update">
@@ -128,23 +130,23 @@ class index extends Component {
         <div>
           <div className="wrapper">
             <div className="image">
-             
-            <span><img src={category.images}></img></span>
+              <span>
+                <img src={category.images} />
+              </span>
             </div>
             <div className="detail">
               <span className="message">{message}</span>
 
               <div className="box">
-                <div className="name">
+                {/* <div className="name">
                 Id <br />
                   <span>{category.category_id}</span>
-                </div>
+                </div> */}
                 <div className="code">
                   Name <br />
                   <span>{category.category_name}</span>
                 </div>
-                <div className="category">
-                </div>
+                <div className="category" />
               </div>
             </div>
           </div>

@@ -72,7 +72,7 @@ class index extends Component {
               <button
                 onClick={() => {
                   this.deleteBrand(
-                    brand. brand_id == null ?  brand.id :  brand. brand_id
+                    brand.brand_id == null ? brand.id : brand.brand_id
                   );
                 }}
               >
@@ -100,7 +100,7 @@ class index extends Component {
             >
               Brands
             </Link>{" "}
-            <span>{" > " +  brand. brand_name}</span>
+            <span>{" > " + brand.brand_name}</span>
           </div>
 
           <div className="action">
@@ -115,7 +115,7 @@ class index extends Component {
             <Link
               style={{ textDecoration: "none" }}
               to={{
-                pathname: `/updatebrand/${ brand. brand_id}`,
+                pathname: `/updatebrand/${brand.brand_id}`,
                 state: { brand },
               }}
             >
@@ -128,30 +128,30 @@ class index extends Component {
         <div>
           <div className="wrapper">
             <div className="image">
-            <span><img src={brand.image}></img></span>
-              
+              <span>
+                <img src={brand.image} />
+              </span>
             </div>
             <div className="detail">
               <span className="message">{message}</span>
 
               <div className="box">
-                <div className="name">
+                {/* <div className="name">
                 Id <br />
                   <span>{ brand. brand_id}</span>
-                </div>
+                </div> */}
                 <div className="code">
                   Name <br />
-                  <span>{ brand. brand_name}</span>
+                  <span>{brand.brand_name}</span>
                 </div>
                 <div className="code">
                   Origin <br />
-                  <span>{ brand. brand_origin}</span>
+                  <span>{brand.brand_origin}</span>
                 </div>
                 <div className="code">
                   About <br />
-                  <span>{ brand. brand_about}</span>
+                  <span>{brand.brand_about}</span>
                 </div>
-          
               </div>
             </div>
           </div>

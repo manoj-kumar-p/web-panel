@@ -34,6 +34,10 @@ class index extends Component {
 
   fetchCategories = async () => {
     var categoriesArray = [];
+    var t_categories = localStorage.getItem("categories");
+    if (t_categories) {
+      this.setState({ categories: JSON.parse(t_categories), loading: false });
+    }
 
     const categoriesRef = firebase.firestore().collection("categories");
     await categoriesRef.get().then(function(snapshot) {
@@ -46,16 +50,8 @@ class index extends Component {
     this.props.categoryAction(categoriesArray);
   };
 
-  
-
   render() {
-    const {
-      top,
-      loading,
-      show,
-      categories,
-      category_id,
-    } = this.state;
+    const { top, loading, show, categories, category_id } = this.state;
     return (
       <div className="products">
         <Header />

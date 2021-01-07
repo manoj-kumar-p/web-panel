@@ -9,7 +9,8 @@ class Order extends Component {
     state = {
         detail: false,
         input: false,
-        id: null
+        id: null,
+        orders: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     }
 
     confirm(id){
@@ -20,8 +21,48 @@ class Order extends Component {
         this.setState({ id: id, input: true })
     }
 
-
-
+    // async getProductOfId(products) {
+    //   var user = await firebase
+    //     .firestore()
+    //     .collection("products")
+    //     .doc(products)
+    //     .get();
+    //   return user.data();
+    // }
+    // async fetchProductsordered() {
+    //   let prodcutsordered = JSON.parse(localStorage.getItem("prodcutsordered"));
+    //   if (prodcutsordered) {
+    //     this.setState({ prodcutsordered, loading: false });
+    //   }
+  
+    //   var prodcutsorderedArray = [];
+    //   const getProductOfId = this.getProductOfId;
+    //   const setState = (e) => this.setState(e);
+    //   await firebase
+    //     .firestore()
+    //     .collection("orders")
+    //     .get()
+    //     .then(function(snapshot) {
+    //       if (snapshot) {
+    //         snapshot.forEach(async (doc) => {
+    //           var data = doc.data();
+    //           var product = await getProductOfId(data.products); //TODO
+    //           Object.assign(data, {
+    //             name: product.name,
+    //           });
+    //           prodcutsorderedArray.push(data);
+    //           if (prodcutsorderedArray.length == snapshot.size) {
+    //             console.log("prodcutsordered: ", prodcutsorderedArray);
+    //             localStorage.setItem("prodcutsordered", JSON.stringify(prodcutsorderedArray));
+    //             setState({ prodcutsordered: prodcutsorderedArray, loading: false });
+    //           }
+    //         });
+    //       }
+    //     });
+    // }
+    // async componentDidMount() {
+    //   this.fetchProductsordered();
+    // }
     timeConverter(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
       var months = [
@@ -40,7 +81,6 @@ class Order extends Component {
       ];
       var year = a.getFullYear();
       var month = months[a.getMonth()];
-      // month = a.getMonth();
       var date = a.getDate();
       var hour = a.getHours();
       var min = a.getMinutes();
@@ -132,11 +172,54 @@ class Order extends Component {
                   </div>
                 </div>
 
-                <div className="product-shipping">
-                  <span>Products</span>
-                  <div classname="product">
-                    </div>
-                </div>
+                {/* <div className="product-shipping" style={{ marginBottom: "1em" }}>
+              <div style={{ height: "1.5em", textAlign: "left" }}>
+                <span>Products</span>
+                <button
+                  style={{
+                    backgroundColor: "#216aaf",
+                    marginLeft: "2em",
+                    color: "white",
+                  }}
+                  onClick={async () => {
+                    await this.getOrderedProducts();
+                  }}
+                >
+                  Show products
+                </button>
+              </div>
+              {orderedProducts.length < 1
+                ? ""
+                : orderedProducts.map(function(e, idx) {
+                    return (
+                      <div
+                        key={idx}
+                        style={{
+                          display: "flex",
+                          marginLeft: "5em",
+                          marginRight: "5em",
+                          borderBottomWidth: "1px",
+                          borderBottomColor: "#aa1111",
+                          borderBottomStyle: "solid",
+                          height: "2.8em",
+                        }}
+                      >
+                        <h3>{e.name}</h3>
+                        <h3
+                          style={{
+                            position: "absolute",
+                            marginLeft: "15em",
+                            color: "black",
+                          }}
+                        >
+                          {e.quantity}
+                        </h3>
+                        <br />
+                      </div>
+                    );
+                  })}
+              <span>{"  "}</span>
+            </div> */}
               </div> : <div onClick={() => this.setState({
                     detail: true,
                   })} className="hide">

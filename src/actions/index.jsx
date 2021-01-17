@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, FETCH_CATEGORIES, FETCH_BRANDS , FETCH_COUPONS} from "../types";
+import { LOGIN, LOGOUT, FETCH_CATEGORIES, FETCH_BRANDS , FETCH_COUPONS, FETCH_PINCODES} from "../types";
 
 export const userAction = (payload, login, token) => {
   return (dispatch) => {
@@ -60,6 +60,16 @@ export const couponAction = (payload) => {
     localStorage.setItem("coupons", JSON.stringify(payload));
     dispatch({
       type: FETCH_COUPONS,
+      payload,
+    });
+  };
+};
+
+export const pincodeAction = (payload) => {
+  return (dispatch) => {
+    localStorage.setItem("pincodes", JSON.stringify(payload));
+    dispatch({
+      type: FETCH_PINCODES,
       payload,
     });
   };

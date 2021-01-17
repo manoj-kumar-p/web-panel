@@ -26,6 +26,10 @@ import Coupon from "./components/Coupon";
 import Brand from "./components/Brand/index";
 import Category from "./components/Category";
 import Upd from "./components/Product/Upd";
+import Pincodes from "./components/Pincodes";
+import Pincode from "./components/Pincode";
+import AddPincode from "./components/Pincode/AddPincode";
+import UpdatePincode from "./components/Pincode/Up";
 
 class App extends Component {
   componentDidMount() {
@@ -52,6 +56,7 @@ class App extends Component {
             <Route path="/category/:id" component={Category} />
             <Route path="/coupon/:id" component={Coupon} />
             <Route path="/brand/:id" component={Brand} />
+            <Route path="/pincode/:id" component={Pincode} />
             {/* until here */}
             <Route path="/products" component={Products} />
             <Route path="/customers" component={Customers} />
@@ -59,16 +64,19 @@ class App extends Component {
             <Route path="/categories" component={Categories} />
             <Route path="/coupons" component={Coupons} />
             <Route path="/brands" component={Brands} />
+            <Route path="/pincodes" component={Pincodes} />
             <Route path="/addproduct" component={AddProduct} />
             <Route path="/addcategory" component={AddCategory} />
             <Route path="/addbrand" component={AddBrand} />
             <Route path="/addcoupon" component={AddCoupon} />
+            <Route path="/addpincode" component={AddPincode} />
             <Route path="/product/:id" component={Product} />
             <Route path="/admin" component={Admin} />
             <Route path="/updateproduct/:id" component={Upd} />
             <Route path="/updatecategory/:id" component={UpdateCategory} />
             <Route path="/updatebrand/:id" component={UpdateBrand} />
             <Route path="/updatecoupon/:code" component={UpdateCoupon} />
+            <Route path="/updatepincode/:pincode" component={UpdatePincode} />
             <Route path="/*" component={Home} />
           </Switch>
         ) : (

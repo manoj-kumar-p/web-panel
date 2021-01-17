@@ -72,8 +72,8 @@ class AddCoupon extends Component {
       await couponsRef
         .set({
           code,
-          discount,
-          validAbove
+          discount:parseInt(discount),
+          validAbove:parseInt(validAbove)
         })
         .then(success)
         .catch(failure);

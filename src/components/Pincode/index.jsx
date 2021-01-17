@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./coupon.scss";
+import "./pincode.scss";
 import axios from "axios";
 import { url, headers, price } from "../../config";
 import { connect } from "react-redux";
@@ -12,22 +12,22 @@ import Navbar from "../Navbar";
 
 class index extends Component {
   state = {
-    coupon: "",
+   pincode: "",
     comfirm_delete: true,
     message: "",
     loading: true,
     currentImageIndex: 0,
   };
 
-  deleteCoupon(id) {
+  deletePincode(id) {
     firebase
       .firestore()
-      .collection("coupons")
+      .collection("pincodes")
       .doc(id)
       .delete()
       .then((res) => {
         console.log("successfully deleted");
-        this.props.history.push("/coupons");
+        this.props.history.push("/pincodes");
         this.setState({ message: "Successfully deleted" });
       })
       .catch((err) => {
@@ -39,15 +39,15 @@ class index extends Component {
   async componentDidMount() {
     if (this.props.location.state) {
       await this.setState({
-        coupon: this.props.location.state,
+        pincode: this.props.location.state,
         loading: false,
       });
     } else {
       let id = this.props.match.params.id;
-      axios(url + "/coupon/" + id).then((res) => {
+      axios(url + "/pincode/" + id).then((res) => {
         if (res.data) {
           this.setState({
-            coupon: res.data,
+            pincode: res.data,
             loading: false,
           });
         }
@@ -56,7 +56,7 @@ class index extends Component {
   }
 
   render() {
-    const { coupon, comfirm_delete, message, loading } = this.state;
+    const { pincode, comfirm_delete, message, loading } = this.state;
     return (
       <div className="detail-product">
         <Header />
@@ -71,8 +71,8 @@ class index extends Component {
               <h3>Are you sure want to delete?</h3>
               <button
                 onClick={() => {
-                  this.deleteCoupon(
-                    coupon.code == null ? coupon.id : coupon.code
+                  this.deletePincode(
+                    pincode.pincode == null ? pincode.id : pincode.pincode
                   );
                 }}
               >
@@ -96,11 +96,11 @@ class index extends Component {
                 color: "#4694fc",
                 fontWeight: "400",
               }}
-              to="/coupons"
+              to="/pincodes"
             >
-              Coupons
+              Pincodes
             </Link>{" "}
-            <span>{" > " +coupon.code}</span>
+            <span>{" > " +pincode.pincode}</span>
           </div>
 
           <div className="action">
@@ -115,8 +115,8 @@ class index extends Component {
             <Link
               style={{ textDecoration: "none" }}
               to={{
-                pathname: `/updatecoupon/${coupon.code}`,
-                state: {coupon },
+                pathname: `/updatepincode/${pincode.pincode}`,
+                state: {pincode },
               }}
             >
               <div className="update">
@@ -132,16 +132,12 @@ class index extends Component {
 
               <div className="box">
                 <div className="name">
-                Code <br />
-                  <span>{coupon.code}</span>
+                Pincode <br />
+                  <span>{pincode.pincode}</span>
                 </div>
                 <div className="code">
-                  Discount <br />
-                  <span>{coupon.discount}</span>
-                </div>
-                <div className="code">
-                  Minimum Amount <br />
-                  <span>{coupon.validAbove}</span>
+                  Charges <br />
+                  <span>{pincode.charge}</span>
                 </div>
                 <div className="category">
                 </div>

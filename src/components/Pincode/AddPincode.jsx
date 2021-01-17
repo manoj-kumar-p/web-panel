@@ -1,27 +1,22 @@
 import React, { Component } from "react";
-import "./addcoupon.scss";
-import axios from "axios";
+import "./addpincode.scss";
 import ReactQuill from "react-quill";
 import { Link } from "react-router-dom";
 import "react-quill/dist/quill.snow.css";
-import { url, headers } from "../../config";
 import { connect } from "react-redux";
-import _ from "lodash";
+import _, { reject } from "lodash";
 
 import Header from "../Header";
 import Navbar from "../Navbar";
 import Loading from "../Loading";
 import firebase from "../../init-firebase";
 
-class Up extends Component {
+class AddPincode extends Component {
   state = {
     message: "",
     description: "",
     success: false,
     loading: false,
-    code: this.props.location.state.coupon.code,
-    discount: this.props.location.state.coupon.discount,
-    validAbove: this.props.location.state.coupon.validAbove,
   };
 
 
@@ -32,36 +27,30 @@ class Up extends Component {
   };
 
 
+
   handleSubmit = async (e) => {
     e.preventDefault();
     const {
-      code,
-      discount,
-      validAbove,
-      file,
+      pincode,
+      charge,
     } = this.state;
-    const token = this.props.user.token;
-    console.log("state:", this.state);
-    if (!code) this.setState({ message: "Submit code" });
-    if (!discount) this.setState({ message: "Submit disocunt amount" });
-    if (!validAbove) this.setState({ message: "Submit minimum order amount" });
+
+    if (!pincode) this.setState({ message: "Submit pincode" });
+    if (!charge) this.setState({ message: "Submit amount" });
+    
     this.setState({ messageadd: "" });
 
     if (
-      code&&
-      discount&&
-      validAbove
+     pincode&&
+     charge
     ) {
       this.setState({ loading: true });
-      let data = new FormData();
-      data.append("image", file);
       const success = () =>
         this.setState({
           loading: false,
-          message: "Successfull ",
-          code: "",
-          discount: "",
-          validAbove:"",
+          message: "Successfull",
+          pincode: "",
+          charge:"" ,
         });
 
       const failure = (e) => {
@@ -69,22 +58,21 @@ class Up extends Component {
           loading: false,
           message: "Failed ",
         });
-        console.log("error  ", e);
+        console.log("error ", e);
       };
 
-      const couponsRef = firebase
+      const pincodesRef = firebase
         .firestore()
-        .collection("coupons")
-        .doc(code);
-      await  couponsRef
-        .update({
-          code,
-          discount:parseInt(discount),
-          validAbove:parseInt(validAbove)
+        .collection("pincodes")
+        .doc(pincode);
+      await pincodesRef
+        .set({
+          pincode,
+          charge:parseInt(charge)
         })
         .then(success)
         .catch(failure);
-      console.log( couponsRef.id);
+      console.log(pincodesRef.id);
     }
   };
 
@@ -93,24 +81,23 @@ class Up extends Component {
       loading,
       message,
 
-      code,
-      discount,
-      validAbove,
+      pincode,
+      charge,
       success,
     } = this.state;
     return (
       <div className="add-wrapper">
         <Header />
         <Navbar />
-        <Link to="/coupons">
+        <Link to="/pincodes">
           <div className="cancel">
             <i className="demo-icon icon-cancel">&#xe80f;</i>
           </div>
         </Link>
         {loading ? <Loading /> : ""}
 
-        <div className="add-product">
-          <h1>Update</h1>
+        <div className="add-coupon">
+          <h1>Add Charge</h1>
           {success ? (
             <div className="success">
               <div>Success</div>
@@ -118,32 +105,23 @@ class Up extends Component {
           ) : (
             ""
           )}
-
-
           <form onSubmit={this.handleSubmit}>
-            <label htmlFor="">Code</label>
+            <label htmlFor="">Pincode</label>
             <input
-              value={code || ""}
+              value={pincode || ""}
               onChange={this.handleChange}
-              name="code"
+              name="pincode"
               type="text"
             />
-            <label htmlFor="">Discount</label>
+            <label htmlFor="">Charge</label>
             <input
-              value={discount || ""}
+              value={charge || ""}
               onChange={this.handleChange}
-              name="discount"
-              type="text"
-            />
-            <label htmlFor="">Minimum order amount </label>
-            <input
-              value={validAbove || ""}
-              onChange={this.handleChange}
-              name="validAbove"
-              type="text"
+              name="charge"
+              type="integer"
             />
             <span className="message">{message}</span>
-            <button type="submit">Update</button>
+            <button type="submit">Save</button>
           </form>
         </div>
       </div>
@@ -153,9 +131,9 @@ class Up extends Component {
 
 const mapStateToProps = (state) => {
   return {
-   coupons: state.couponsReducer,
+    pincodes: state.pincodesReducer,
     user: state.userReducer,
   };
 };
 
-export default connect(mapStateToProps)(Up);
+export default connect(mapStateToProps)(AddPincode);

@@ -123,8 +123,6 @@ class Order extends Component {
   render() {
     const { detail, input } = this.state;
     const { order, status } = this.props;
-    const products = order.products;
-    const productsquantities = order.productQuantities;
     const orderedProducts = this.state.orderedProducts;
     return (
       <div className="order">

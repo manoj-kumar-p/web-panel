@@ -40,6 +40,11 @@ export default function index(props) {
         <i className="demo-icon icon-tags">&#xe816;</i>
         <span> Coupons</span>{" "}
       </NavLink>
+      <NavLink className="link" to="/pincodes" activeClassName="active">
+        {" "}
+        <i className="demo-icon icon-tags">&#xe816;</i>
+        <span>Charges</span>{" "}
+      </NavLink>
       <NavLink className="link" to="/feedbacks" activeClassName="active">
         {" "}
         <i className="demo-icon icon-users-1">&#xe816;</i>

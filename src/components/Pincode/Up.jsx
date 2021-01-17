@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./addcoupon.scss";
+import "./addpincode.scss";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import { Link } from "react-router-dom";
@@ -19,9 +19,8 @@ class Up extends Component {
     description: "",
     success: false,
     loading: false,
-    code: this.props.location.state.coupon.code,
-    discount: this.props.location.state.coupon.discount,
-    validAbove: this.props.location.state.coupon.validAbove,
+    pincode: this.props.location.state.pincode.pincode,
+    charge: this.props.location.state.pincode.charge,
   };
 
 
@@ -35,22 +34,19 @@ class Up extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const {
-      code,
-      discount,
-      validAbove,
+      pincode,
+      charge,
       file,
     } = this.state;
     const token = this.props.user.token;
     console.log("state:", this.state);
-    if (!code) this.setState({ message: "Submit code" });
-    if (!discount) this.setState({ message: "Submit disocunt amount" });
-    if (!validAbove) this.setState({ message: "Submit minimum order amount" });
+    if (!pincode) this.setState({ message: "Submit pincode" });
+    if (!charge) this.setState({ message: "Submit amount" });
     this.setState({ messageadd: "" });
 
     if (
-      code&&
-      discount&&
-      validAbove
+      pincode&&
+      charge
     ) {
       this.setState({ loading: true });
       let data = new FormData();
@@ -59,9 +55,8 @@ class Up extends Component {
         this.setState({
           loading: false,
           message: "Successfull ",
-          code: "",
-          discount: "",
-          validAbove:"",
+          pincode: "",
+         charge: "",
         });
 
       const failure = (e) => {
@@ -72,19 +67,18 @@ class Up extends Component {
         console.log("error  ", e);
       };
 
-      const couponsRef = firebase
+      const pincodesRef = firebase
         .firestore()
-        .collection("coupons")
-        .doc(code);
-      await  couponsRef
+        .collection("pincodes")
+        .doc(pincode);
+      await  pincodesRef
         .update({
-          code,
-          discount:parseInt(discount),
-          validAbove:parseInt(validAbove)
+          pincode,
+          charge:parseInt(charge)
         })
         .then(success)
         .catch(failure);
-      console.log( couponsRef.id);
+      console.log(pincodesRef.id);
     }
   };
 
@@ -93,9 +87,8 @@ class Up extends Component {
       loading,
       message,
 
-      code,
-      discount,
-      validAbove,
+      pincode,
+      charge,
       success,
     } = this.state;
     return (
@@ -121,25 +114,18 @@ class Up extends Component {
 
 
           <form onSubmit={this.handleSubmit}>
-            <label htmlFor="">Code</label>
+            <label htmlFor="">Pincode</label>
             <input
-              value={code || ""}
+              value={pincode || ""}
               onChange={this.handleChange}
-              name="code"
+              name="pincode"
               type="text"
             />
-            <label htmlFor="">Discount</label>
+            <label htmlFor="">Charge</label>
             <input
-              value={discount || ""}
+              value={charge || ""}
               onChange={this.handleChange}
-              name="discount"
-              type="text"
-            />
-            <label htmlFor="">Minimum order amount </label>
-            <input
-              value={validAbove || ""}
-              onChange={this.handleChange}
-              name="validAbove"
+              name="charge"
               type="text"
             />
             <span className="message">{message}</span>

@@ -5,3 +5,4 @@ export const LOGOUT = "LOGOUT";
 export const FETCH_CATEGORIES = "FETCH_CATEGORIES";
 export const FETCH_BRANDS = "FETCH_BRANDS";
 export const FETCH_COUPONS = "FETCH_COUPONS";
+export const FETCH_PINCODES = "FETCH_PINCODES";

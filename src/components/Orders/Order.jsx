@@ -220,9 +220,11 @@ class Order extends Component {
                 <span>Products</span>
                 <button
                   style={{
-                    backgroundColor: "#216aaf",
+                    backgroundColor: " #F23E77",
+                    border:"none",
                     marginLeft: "2em",
                     color: "white",
+                    height:"30px",
                   }}
                   onClick={async () => {
                     await this.getOrderedProducts();
@@ -244,13 +246,14 @@ class Order extends Component {
                           marginLeft: "5em",
                           marginRight: "5em",
                           borderBottomWidth: "1px",
-                          borderBottomColor: "#aa1111",
+                          borderBottomColor: " #f07aab",
+                          color:" #f07aab",
                           borderBottomStyle: "solid",
                           height: "2.8em",
                         }}
                       >
-                        <h3>{e.name}</h3>
-                        <h3
+                        <h3>{e.name}   <div style={{ color: "black"}}>{e.quantity}</div> <div style={{ color: "black"}}>{e.size}</div></h3>
+                        {/* <h3
                           style={{
                             position: "absolute",
                             marginLeft: "15em",
@@ -262,12 +265,13 @@ class Order extends Component {
                         <h3
                           style={{
                             position: "absolute",
-                            marginLeft: "25em",
+                            marginLeft: "65em",
+                            marginRight: "5em",
                             color: "black",
                           }}
                         >
                           {e.size}
-                        </h3>
+                        </h3> */}
                         <br />
                       </div>
                     );

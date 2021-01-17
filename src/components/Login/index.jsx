@@ -7,7 +7,7 @@ import { loginAction } from "../../actions";
 import { Redirect } from "react-router-dom";
 import Loading from "../Loading";
 
-import imageform from "../../assets/login-form.svg";
+import imageform from "../../assets/login-form.png";
 import imgBackground from "../../assets/login-bg.png";
 import imgPerson from "../../assets/login-person.svg";
 import screen1 from "../../assets/login-screen1.svg";
